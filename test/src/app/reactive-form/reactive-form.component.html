@@ -1,0 +1,65 @@
+<div class="container mt-5" style="max-width: 550px;">
+    <form [formGroup]="reactiveForm">
+        <p class="title">Reactive form</p>
+        <div class="form-block">
+            <label>Name</label>
+            <div class="form-group">
+                <input type="text" class="form-control" name="name" formControlName="username">
+
+            </div>
+            <div class="validators"
+                *ngIf="reactiveForm.get('username')?.invalid && reactiveForm.get('username')?.touched">
+                <div class="text-danger mt-1" *ngIf="reactiveForm.get('username')?.errors?.required">
+                    Name is required </div>
+
+                <div class="text-danger mt-1" *ngIf="reactiveForm.get('username')?.errors?.minlength">
+                    Minimum number of characters: {{ reactiveForm.get('username')?.errors?.minlength.requiredLength }}
+                </div>
+
+                <div class="text-danger mt-1" *ngIf="reactiveForm.get('username')?.errors?.maxlength">
+                    Maximum number of characters: {{ reactiveForm.get('username')?.errors?.maxlength.requiredLength }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-box">
+                <input type="password" class="form-control" name="password" formControlName="password">
+
+            </div>
+
+            <div class="validators"
+                *ngIf="reactiveForm.get('password')?.invalid && reactiveForm.get('password')?.touched">
+                <div class="text-danger mt-1" *ngIf="reactiveForm.get('password')?.errors?.required">
+                    Password is required
+                </div>
+
+                <div class="text-danger mt-1" *ngIf="reactiveForm.get('password')?.errors?.onlyNumberAndWord">
+                    Please, enter at least one number and letter
+                </div>
+            </div>
+        </div>
+        <div formArrayName="emails">
+            <div>
+                <label>Email</label>
+            </div>
+            <div *ngFor="let control of emailFormArray.controls; let idx = index">
+                <input type="text" class="form-control" name="name" [formControlName]="idx">
+                <button type="button" class="btn btn-danger" (click)="removeControl(idx)">&times;</button>
+                <div class="validators" *ngIf="emailFormArray.at(idx).invalid && emailFormArray.at(idx).touched">
+                    <div class="text-danger mt-1" *ngIf="emailFormArray.at(idx)?.errors?.required">
+                        Email is required
+                    </div>
+
+                    <small class="form__reactive-error-dynamic" *ngIf="emailFormArray.at(idx)?.errors?.email">
+                        Please, enter valid email
+                    </small>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success" (click)="addEmail()">Add email</button>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()"
+            [disabled]="reactiveForm.invalid">Submit</button>
+    </form>
+</div>
